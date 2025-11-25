@@ -1,0 +1,10 @@
+# Binaries
+gorecheck
+
+# Dependencies
+node_modules/
+
+# Go
+*.test
+*.out
+go.work
