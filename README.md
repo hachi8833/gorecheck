@@ -69,6 +69,48 @@ The output is a YAML list of results:
    go build -o gorecheck main.go
    ```
 
+## Testing
+
+Run all tests:
+```bash
+go test -v ./...
+```
+
+Run tests with coverage:
+```bash
+go test -cover ./recheck
+```
+
+Run specific test suites:
+```bash
+# Test complex Japanese patterns
+go test -v ./recheck -run TestComplexJapanesePatterns
+
+# Test timeout handling
+go test -v ./recheck -run TestNoTimeout
+
+# Test large response handling
+go test -v ./recheck -run TestLargeResponse
+
+# Test multiple patterns
+go test -v ./recheck -run TestMultiplePatterns
+
+# Test edge cases
+go test -v ./recheck -run TestEdgeCases
+```
+
+The test suite includes:
+- **TestClient**: Basic functionality tests
+- **TestComplexJapanesePatterns**: Tests for the bug fix (complex Japanese regex patterns)
+- **TestNoTimeout**: Verifies that complex patterns don't timeout
+- **TestLargeResponse**: Tests handling of large responses from recheck
+- **TestMultiplePatterns**: Tests sequential pattern checking
+- **TestEdgeCases**: Tests edge cases (empty character class, Unicode, lookahead)
+
+Current test coverage: **73.1%**
+
+For more details on the bug fix, see [BUG_FIX.md](BUG_FIX.md).
+
 ## License
 
 MIT
