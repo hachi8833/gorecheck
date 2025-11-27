@@ -39,10 +39,17 @@ func NewClient(binaryPath string) (*Client, error) {
 		return nil, fmt.Errorf("failed to start recheck agent: %w", err)
 	}
 
+	scanner := bufio.NewScanner(stdoutPipe)
+	// Increase buffer size to handle large responses (e.g., attack strings)
+	// Default is 64KB, but recheck can return much larger responses
+	const maxScanTokenSize = 10 * 1024 * 1024 // 10MB
+	buf := make([]byte, maxScanTokenSize)
+	scanner.Buffer(buf, maxScanTokenSize)
+
 	return &Client{
 		cmd:    cmd,
 		stdin:  stdin,
-		stdout: bufio.NewScanner(stdoutPipe),
+		stdout: scanner,
 		nextID: 1,
 	}, nil
 }
@@ -61,7 +68,9 @@ func (c *Client) Check(source string) (*Result, error) {
 		Params: CheckParams{
 			Source: source,
 			Flags:  "",
-			Params: map[string]interface{}{},
+			Params: CheckParamsConfig{
+				Timeout: nil, // null = no timeout limit
+			},
 		},
 		ID: id,
 	}
