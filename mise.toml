@@ -1,0 +1,18 @@
+[tools]
+node = "latest"
+
+[tasks.recheck-update]
+description = "Update recheck to the latest version"
+run = "npm update recheck"
+
+[tasks.recheck-version]
+description = "Check installed recheck version"
+run = "npm list recheck"
+
+[tasks.build]
+description = "Build gorecheck"
+run = "go build -o gorecheck main.go"
+
+[tasks.test]
+description = "Run tests"
+run = "go test ./..."
