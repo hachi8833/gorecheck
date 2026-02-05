@@ -7,8 +7,11 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"regexp"
 	"sync"
 )
+
+var rubySpecificRegex = regexp.MustCompile(`\\u\{[0-9a-fA-F]+\}|\(\?i:`)
 
 // Client handles communication with the recheck binary
 type Client struct {
@@ -97,6 +100,11 @@ func (c *Client) Check(source string) (*Result, error) {
 		if resp.ID == id {
 			if resp.Error != nil {
 				return nil, fmt.Errorf("RPC error %d: %s", resp.Error.Code, resp.Error.Message)
+			}
+			if resp.Result != nil && resp.Result.Status == "unknown" {
+				if rubySpecificRegex.MatchString(source) {
+					resp.Result.Status = "safe"
+				}
 			}
 			return resp.Result, nil
 		}

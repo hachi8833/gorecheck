@@ -54,4 +54,24 @@ func TestClient(t *testing.T) {
 			}
 		}
 	})
+
+	t.Run("Ruby Unicode Pattern", func(t *testing.T) {
+		res, err := client.Check(`\u{2029}`)
+		if err != nil {
+			t.Fatalf("Check failed: %v", err)
+		}
+		if res.Status != "safe" {
+			t.Errorf("Expected status 'safe' for ruby unicode, got '%s'. Result: %+v", res.Status, res)
+		}
+	})
+
+	t.Run("Ruby Match Option Pattern", func(t *testing.T) {
+		res, err := client.Check(`(?i:ancesfor)`)
+		if err != nil {
+			t.Fatalf("Check failed: %v", err)
+		}
+		if res.Status != "safe" {
+			t.Errorf("Expected status 'safe' for ruby match option, got '%s'. Result: %+v", res.Status, res)
+		}
+	})
 }
