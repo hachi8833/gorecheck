@@ -1,5 +1,5 @@
 # Binaries
-gorecheck
+gorecheck*
 
 # Dependencies
 node_modules/
@@ -8,3 +8,4 @@ node_modules/
 *.test
 *.out
 go.work
+recheck/bin/recheck-linux-amd64

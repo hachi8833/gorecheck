@@ -2,20 +2,16 @@ package recheck
 
 import (
 	"crypto/sha256"
-	"embed"
 	"fmt"
 	"os"
 	"path/filepath"
 )
 
-//go:embed bin/recheck
-var embeddedBinary embed.FS
-
 // GetBinaryPath returns the path to the executable recheck binary.
 // It extracts the embedded binary to a temporary file if needed.
 func GetBinaryPath() (string, error) {
 	// 1. Read embedded content
-	data, err := embeddedBinary.ReadFile("bin/recheck")
+	data, err := embeddedBinary.ReadFile(binaryName)
 	if err != nil {
 		return "", fmt.Errorf("failed to read embedded binary: %w", err)
 	}
