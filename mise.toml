@@ -11,7 +11,10 @@ run = "npm list recheck"
 
 [tasks.build]
 description = "Build gorecheck"
-run = "go build -o gorecheck main.go"
+run = '''
+go build -o gorecheck main.go
+GOOS=linux GOARCH=amd64 go build -o gorecheck-linux-amd64 main.go
+'''
 
 [tasks.test]
 description = "Run tests"
