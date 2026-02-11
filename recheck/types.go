@@ -37,11 +37,14 @@ type CheckParamsConfig struct {
 
 // Result represents the result of a recheck analysis
 type Result struct {
-	Source  string        `json:"source"`
-	Flags   string        `json:"flags"`
-	Status  string        `json:"status"`
-	Checker interface{}   `json:"checker"` // Can be null or object
-	Error   *RecheckError `json:"error,omitempty"`
+	Source     string        `json:"source"`
+	Flags      string        `json:"flags"`
+	Status     string        `json:"status"`
+	Checker    interface{}   `json:"checker"` // Can be null or object
+	Error      *RecheckError `json:"error,omitempty"`
+	Complexity interface{}   `json:"complexity,omitempty" yaml:",omitempty"`
+	Attack     interface{}   `json:"attack,omitempty" yaml:",omitempty"`
+	Hotspot    interface{}   `json:"hotspot,omitempty" yaml:",omitempty"`
 }
 
 // RecheckError represents an error from the recheck logic (not JSON-RPC error)
