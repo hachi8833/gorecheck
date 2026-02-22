@@ -12,35 +12,12 @@ run = "npm list recheck"
 
 [tasks.build]
 description = "Build gorecheck"
-run = '''
-# Download linux binary if not exists
-if [ ! -f recheck/bin/recheck-linux-amd64 ]; then
-  echo "Downloading recheck-linux-amd64..."
-  curl -L -o recheck/bin/recheck-linux-amd64 https://github.com/makenowjust-labs/recheck/releases/download/v4.5.0/recheck-linux-x64
-  chmod +x recheck/bin/recheck-linux-amd64
-fi
-
-go build -o gorecheck main.go
-GOOS=linux GOARCH=amd64 go build -o gorecheck-linux-amd64 main.go
-'''
+run = "bash scripts/build.sh"
 
 [tasks.test]
 description = "Run tests"
 run = "go test ./..."
 
-[tasks.deploy]
-description = "Deploy binaries"
-run = '''
-mkdir -p ../enno_jp/vendor/arm64/bin/
-mv gorecheck ../enno_jp/vendor/arm64/bin/
-mkdir -p ../enno_jp/vendor/amd64/bin/
-mv gorecheck-linux-amd64 ../enno_jp/vendor/amd64/bin/gorecheck
-'''
-
-[tasks.all]
-description = "Run recheck-update, build, and deploy sequentially"
-run = '''
-mise run recheck-update
-mise run build
-mise run deploy
-'''
+[tasks.clean]
+description = "Clear build artifacts"
+run = "rm -rf gorecheck gorecheck-linux-amd64"
