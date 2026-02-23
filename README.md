@@ -8,6 +8,33 @@
 - **Standard Input Support**: Pipe regex patterns directly into the tool.
 - **YAML Output**: Results are formatted in YAML for easy reading and parsing.
 - **Cross-Platform (Limited)**: Currently embeds the macOS arm64 binary.
+- **Ruby Regex Normalization**: Ruby-specific syntax is automatically normalized before checking (see below).
+
+## Ruby Regex Normalization
+
+Ruby supports regex syntax that recheck does not understand natively. `gorecheck` automatically normalizes the following constructs before passing patterns to recheck:
+
+### Unicode code point syntax
+
+Ruby allows `\u{HHHHH}` for Unicode code points. These are converted to the standard `\uHHHH` form:
+
+| Input | Normalized |
+|---|---|
+| `\u{2029}` | `\u2029` |
+| `\u{1F600}` | `\u1F600` |
+
+### Inline flag groups
+
+Ruby supports `(?flags:X)` to enable or disable match flags within a group. The flags and surrounding syntax are stripped, leaving only the inner expression:
+
+| Input | Normalized |
+|---|---|
+| `(?i:ancesfor)` | `ancesfor` |
+| `(?imxs:pattern)` | `pattern` |
+| `(?-i:pattern)` | `pattern` |
+| `(?i-m:pattern)` | `pattern` |
+
+Supported flags: `i` (case-insensitive), `m` (multiline), `x` (extended), `s` (single-line).
 
 ## Installation
 
@@ -51,23 +78,41 @@ The output is a YAML list of results:
 
 ### Dependencies
 
-- Node.js (to download the initial `recheck` binary)
+- [mise](https://mise.jdx.dev/) — manages Go and Node.js versions, and provides task runner
+- Node.js (managed via mise) — used to install and update the `recheck` npm package
+- Go 1.25+ (managed via mise)
 
 ### Setup
 
-1. Install dependencies:
+1. Install mise: https://mise.jdx.dev/getting-started.html
+
+2. Install the required Go and Node.js versions:
+   ```bash
+   mise install
+   ```
+
+3. Install npm dependencies:
    ```bash
    npm install
    ```
-2. Copy the binary for embedding (if updated):
+
+4. Build:
    ```bash
-   mkdir -p recheck/bin
-   cp node_modules/recheck-macos-arm64/recheck recheck/bin/recheck
+   mise run build
    ```
-3. Build:
-   ```bash
-   go build -o gorecheck main.go
-   ```
+
+### Available Tasks
+
+| Task | Description |
+|---|---|
+| `mise run build` | Download the Linux recheck binary (if needed) and build both binaries |
+| `mise run test` | Run all tests |
+| `mise run recheck-update` | Update the `recheck` npm package to the latest version |
+| `mise run recheck-version` | Show the currently installed `recheck` version |
+| `mise run clean` | Remove build artifacts (`gorecheck`, `gorecheck-linux-amd64`) |
+
+> **Note:** `mise run build` skips the download and build if all binaries are already present.
+> To force a rebuild, run `mise run clean` first.
 
 ## Testing
 
