@@ -79,8 +79,8 @@ The output is a YAML list of results:
 ### Dependencies
 
 - [mise](https://mise.jdx.dev/) — manages Go and Node.js versions, and provides task runner
-- Node.js (managed via mise) — used to install and update the `recheck` npm package
-- Go 1.25+ (managed via mise)
+  - Node.js (managed via mise) — used to install and update the `recheck` npm package
+  - Go 1.25+ (managed via mise)
 
 ### Setup
 
