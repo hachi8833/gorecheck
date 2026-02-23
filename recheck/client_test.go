@@ -56,6 +56,7 @@ func TestClient(t *testing.T) {
 	})
 
 	t.Run("Ruby Unicode Pattern", func(t *testing.T) {
+		// \u{2029} is normalized to \u2029 before checking
 		res, err := client.Check(`\u{2029}`)
 		if err != nil {
 			t.Fatalf("Check failed: %v", err)
@@ -66,6 +67,7 @@ func TestClient(t *testing.T) {
 	})
 
 	t.Run("Ruby Match Option Pattern", func(t *testing.T) {
+		// (?i:ancesfor) is normalized to ancesfor before checking
 		res, err := client.Check(`(?i:ancesfor)`)
 		if err != nil {
 			t.Fatalf("Check failed: %v", err)
