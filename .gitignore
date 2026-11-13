@@ -9,3 +9,4 @@ node_modules/
 *.out
 go.work
 recheck/bin/recheck-linux-amd64
+vendor/*
